@@ -27,21 +27,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController _editingController = TextEditingController();
   List<Marker> allMarkers = [];
   GoogleMapController mapController;
   String searchAddr;
 
   @override
   void initState() {
-    super.initState();
     allMarkers.add(
       Marker(
-          markerId: MarkerId('myMarker'),
-          draggable: true,
-          onTap: () {
-            print('Tapped');
-          },
-
+        markerId: MarkerId('myMarker'),
+        draggable: true,
+        onTap: () {
+          print('Tapped');
+        },
       ),
     );
   }
@@ -72,8 +71,9 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.white60,
             ),
             child: TextField(
+              controller: _editingController,
               decoration: InputDecoration(
-                hintText: "Search...",
+                hintText: "Search",
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(
                   left: 15,
@@ -81,8 +81,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 suffixIcon: IconButton(
                   icon: Icon(Icons.search),
-                  onPressed: searchAndNavigate,
-                  iconSize: 30,
+                  onPressed: () {
+                    searchAndNavigate();
+                    _editingController.clear();
+                    iconSize:
+                    30;
+                    FocusScope.of(context).requestFocus(new FocusNode());
+                  },
                 ),
               ),
               onChanged: (val) {
@@ -103,7 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
               target: LatLng(
                   result[0].position.latitude, result[0].position.longitude),
               zoom: 9.5),
-
         ),
       );
     });
